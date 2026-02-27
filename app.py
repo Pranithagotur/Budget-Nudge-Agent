@@ -1,27 +1,15 @@
-from flask import Flask, render_template
-from plyer import notification
+from flask import Flask, render_template, request
+import pandas as pd
 import logging
 import os
 
-from modules.data_loader import load_csv
-from modules.categorization import detect_food_merchants
-from modules.spend_analysis import (
-    calculate_food_summary,
-    threshold_check,
-    vendor_dependency,
-    late_night_detector,
-    spending_anomaly,
-    project_month_end
-)
-from modules.addiction_score import calculate_addiction_score, financial_health_index
-from modules.risk_engine import classify_behavior
-from modules.growth_analysis import week_over_week_growth
-
+# ✅ IMPORT NUDGE GENERATOR
+from modules.nudge_generator import generate_nudge
 
 app = Flask(__name__)
 
 # ======================
-# Professional Logging Setup
+# Logging Setup
 # ======================
 
 if not os.path.exists("logs"):
@@ -33,83 +21,121 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+# ======================
+# 1️⃣ LANDING PAGE
+# ======================
+
 @app.route("/")
+def landing():
+    return render_template("landing.html")
+
+
+# ======================
+# 2️⃣ LOGIN PAGE
+# ======================
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+
+# ======================
+# 3️⃣ DASHBOARD AFTER LOGIN
+# ======================
+
+@app.route("/dashboard", methods=["POST"])
 def dashboard():
+
+    name = request.form["name"]
+    salary = int(request.form["salary"])
+    expenses = int(request.form["expenses"])
+    emi = int(request.form["emi"])
+
+    total_deductions = expenses + emi
+    net_income = salary - total_deductions
+    suggested_food_budget = int(net_income * 0.25)
+
+    return render_template(
+        "dashboard.html",
+        name=name,
+        salary=salary,
+        total_deductions=total_deductions,
+        net_income=net_income,
+        suggested_food_budget=suggested_food_budget,
+        analysis=False
+    )
+
+
+# ======================
+# 4️⃣ FULL ANALYSIS AFTER CSV UPLOAD
+# ======================
+
+@app.route("/analyze", methods=["POST"])
+def analyze():
     try:
-        file_path = "data.csv"
-        df = load_csv(file_path)
-        df = detect_food_merchants(df)
 
-        food_df, total_food_spend, order_count = calculate_food_summary(df)
-        total_spend = df['amount'].sum()
+        # User profile data
+        name = request.form.get("name")
+        salary = int(request.form.get("salary", 0))
+        expenses = int(request.form.get("expenses", 0))
+        emi = int(request.form.get("emi", 0))
 
-        vendor_ratio, top_vendor = vendor_dependency(food_df)
-        late_ratio = late_night_detector(df)
-        anomalies = spending_anomaly(food_df)
+        total_deductions = expenses + emi
+        net_income = salary - total_deductions
+        suggested_food_budget = int(net_income * 0.25)
 
-        limit = 3000
-        projected_spend = project_month_end(food_df)
+        # Food limit + file
+        food_limit = int(request.form.get("food_limit", 0))
+        file = request.files.get("file")
 
-        addiction_score = calculate_addiction_score(
-            order_count,
-            total_food_spend,
-            total_spend,
-            late_ratio,
-            vendor_ratio,
-            projected_spend,
-            limit
-        )
+        if not file:
+            return "No file uploaded"
 
-        risk_level = classify_behavior(addiction_score)
-        growth_percentage = week_over_week_growth(df)
-        fhi = financial_health_index(addiction_score)
+        df = pd.read_csv(file)
 
-        logging.info("Dashboard loaded successfully")
+        if "amount" not in df.columns:
+            return "CSV must contain 'amount' column"
 
-        # ===============================
-        # Desktop Notification System
-        # ===============================
+        total_food_spend = df["amount"].sum()
+        order_count = len(df)
+        projected_spend = round(total_food_spend * 1.2, 2)
 
-        if total_food_spend > limit:
-            notification.notify(
-                title="Budget Alert 🚨",
-                message=f"You exceeded ₹{limit}. Current spend: ₹{total_food_spend}.",
-                timeout=5
-            )
+        risk_level = "High Risk" if total_food_spend > food_limit else "Low Risk"
 
-        if addiction_score > 60:
-            notification.notify(
-                title="High Risk Spending ⚠",
-                message="Your food delivery dependency is high. Consider reducing orders.",
-                timeout=5
-            )
+        # Default behavioral values
+        addiction_score = 0
+        late_ratio = 0
+        growth = 0
 
-        if growth_percentage > 20:
-            notification.notify(
-                title="Spending Growth Alert 📈",
-                message=f"Your spending increased by {growth_percentage}%.",
-                timeout=5
-            )
+        # ✅ Now matches function definition
+        nudge_message = generate_nudge(
+    total_food_spend,
+    food_limit,
+    addiction_score
+)
+
+        logging.info("Analysis completed successfully")
 
         return render_template(
             "dashboard.html",
-            total_spend=total_spend,
+            name=name,
+            salary=salary,
+            total_deductions=total_deductions,
+            net_income=net_income,
+            suggested_food_budget=suggested_food_budget,
+
+            analysis=True,
+            total_spend=total_food_spend,
             food_spend=total_food_spend,
             order_count=order_count,
-            vendor_ratio=round(vendor_ratio*100, 2),
-            top_vendor=top_vendor,
-            late_ratio=round(late_ratio*100, 2),
             projected_spend=projected_spend,
-            addiction_score=addiction_score,
             risk_level=risk_level,
-            fhi=fhi,
-            growth=growth_percentage,
-            anomalies=len(anomalies)
+            nudge=nudge_message
         )
 
     except Exception as e:
-        logging.error(f"Error occurred: {str(e)}")
-        return "Something went wrong. Check logs."
+        logging.error(str(e))
+        return str(e)
 
 
 if __name__ == "__main__":

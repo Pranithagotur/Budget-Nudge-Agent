@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NudgeAI Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="login-container">
+    <div class="login-card">
+        <h2>Welcome to NudgeAI</h2>
+        <form method="POST" action="/dashboard">
+
+            <label>Name</label>
+            <input type="text" name="name" required>
+
+            <label>Monthly Salary (₹)</label>
+            <input type="number" name="salary" required>
+
+            <label>Monthly Required Expenses (₹)</label>
+            <input type="number" name="expenses" required>
+
+            <label>Total Monthly EMI (₹)</label>
+            <input type="number" name="emi" required>
+
+            <button type="submit">Continue</button>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

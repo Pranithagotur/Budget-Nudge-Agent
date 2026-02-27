@@ -1,49 +1,183 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Behavioral Financial Dashboard</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>NudgeAI Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<h1>🧠 Behavioral Financial Intelligence Dashboard</h1>
+<header class="navbar">
+    <h1>🧠 NudgeAI</h1>
+    <p>Behavioral Budget Intelligence</p>
+</header>
 
-<div class="card">
-    <h2>Summary</h2>
-    <p>Total Spend: ₹{{ total_spend }}</p>
-    <p>Food Spend: ₹{{ food_spend }}</p>
-    <p>Total Orders: {{ order_count }}</p>
-</div>
+<div class="container">
 
-<div class="card">
-    <h2>Behavioral Metrics</h2>
-    <p>Vendor Dependency: {{ vendor_ratio }}% ({{ top_vendor }})</p>
-    <p>Late Night Ratio: {{ late_ratio }}%</p>
-    <p>Week-over-Week Growth: {{ growth }}%</p>
-</div>
+    <h2 class="welcome">Welcome, {{ name }}</h2>
 
-<div class="card">
-    <h2>Risk Analysis</h2>
-    <p>Addiction Score: {{ addiction_score }}</p>
-    <p>Risk Level: <strong>{{ risk_level }}</strong></p>
-    <p>Financial Health Index: {{ fhi }}</p>
-    <p>Projected Month-End Spend: ₹{{ projected_spend }}</p>
-</div>
+    <!-- ================= SUMMARY CARDS ================= -->
 
-<div class="card">
-    <h2>Alerts</h2>
-    {% if food_spend > 3000 %}
-        <p class="danger">🚨 Budget Exceeded!</p>
+    <div class="card-grid">
+
+        <div class="stat-card">
+            <h4>Monthly Salary</h4>
+            <p class="amount">₹{{ salary }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h4>Total Deductions</h4>
+            <p class="amount">₹{{ total_deductions }}</p>
+        </div>
+
+        <div class="stat-card highlight">
+            <h4>Net Available Income</h4>
+            <p class="amount">₹{{ net_income }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h4>Suggested Food Budget</h4>
+            <p class="amount">₹{{ suggested_food_budget }}</p>
+        </div>
+
+    </div>
+
+    <!-- ================= FOOD LIMIT + UPLOAD ================= -->
+
+    <div class="card form-card">
+        <h3>Set Your Food Budget Limit</h3>
+
+        <form method="POST" action="/analyze" enctype="multipart/form-data">
+
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="salary" value="{{ salary }}">
+            <input type="hidden" name="expenses" value="{{ total_deductions }}">
+            <input type="hidden" name="emi" value="0">
+
+            <div class="form-group">
+                <label>Food Budget Limit (₹)</label>
+                <input type="number" name="food_limit" required>
+            </div>
+
+            <div class="upload-row">
+                <div>
+                    <label>Upload Bank CSV</label>
+                    <input type="file" name="file" required>
+                </div>
+
+                <div class="or-section">
+                    <span>OR</span>
+                    <button type="button" class="bank-btn">
+                        🔗 Connect Bank Account
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Analyze Spending</button>
+        </form>
+    </div>
+
+    {% if analysis %}
+
+    <!-- ================= ANALYTICS CARDS ================= -->
+
+    <div class="card-grid">
+
+        <div class="stat-card">
+            <h4>Total Spend</h4>
+            <p class="amount">₹{{ total_spend }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h4>Food Spend</h4>
+            <p class="amount">₹{{ food_spend }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h4>Total Orders</h4>
+            <p class="amount">{{ order_count }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h4>Projected Month-End</h4>
+            <p class="amount">₹{{ projected_spend }}</p>
+        </div>
+
+    </div>
+
+    <!-- ================= RISK CARD ================= -->
+
+    <div class="card risk-card">
+        <h3>Behavioral Risk Assessment</h3>
+        <p>
+            Risk Level:
+            <span class="{% if risk_level == 'High Risk' %}danger{% else %}safe{% endif %}">
+                {{ risk_level }}
+            </span>
+        </p>
+    </div>
+
+    <!-- ================= SMART NUDGE ================= -->
+
+    {% if nudge %}
+    <div class="card nudge-card">
+        <h3>💬 Smart AI Nudge</h3>
+        <p>{{ nudge }}</p>
+    </div>
     {% endif %}
 
-    {% if growth > 20 %}
-        <p class="warning">📈 Rapid Spending Growth!</p>
+    <!-- ================= CHARTS ================= -->
+
+    <div class="card-grid">
+
+        <div class="card chart-card">
+            <h3>Spending Breakdown</h3>
+            <canvas id="pieChart"></canvas>
+        </div>
+
+        <div class="card chart-card">
+            <h3>Spending Trend</h3>
+            <canvas id="lineChart"></canvas>
+        </div>
+
+    </div>
+
     {% endif %}
 
-    {% if anomalies > 0 %}
-        <p class="warning">⚠ Spending Anomaly Detected!</p>
-    {% endif %}
 </div>
+
+{% if analysis %}
+<script>
+const totalSpend = { total_spend };
+const foodSpend = { food_spend };
+const projectedSpend = { projected_spend };
+const otherSpend = totalSpend - foodSpend;
+
+new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: {
+        labels: ['Food', 'Other'],
+        datasets: [{
+            data: [foodSpend, otherSpend],
+            backgroundColor: ['#ff6384', '#36a2eb']
+        }]
+    }
+});
+
+new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+        labels: ['Current Spend', 'Projected'],
+        datasets: [{
+            label: 'Spending Trend',
+            data: [foodSpend, projectedSpend],
+            borderColor: '#ff6384',
+            fill: false
+        }]
+    }
+});
+</script>
+{% endif %}
 
 </body>
 </html>

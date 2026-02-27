@@ -36,13 +36,21 @@ def late_night_detector(df):
     if 'time' not in df.columns:
         return 0
 
-    df['hour'] = pd.to_datetime(df['time'], errors='coerce').dt.hour
-    late_orders = df[(df['is_food']) & (df['hour'] >= 22)]
+    # ✅ Safe time parsing with specified format
+    df['hour'] = pd.to_datetime(
+        df['time'],
+        format='%H:%M',   # avoids pandas warning
+        errors='coerce'
+    ).dt.hour
 
-    if len(df[df['is_food']]) == 0:
+    food_df = df[df['is_food'] == True]
+
+    if len(food_df) == 0:
         return 0
 
-    ratio = len(late_orders) / len(df[df['is_food']])
+    late_orders = food_df[food_df['hour'] >= 22]
+
+    ratio = len(late_orders) / len(food_df)
     return ratio
 
 
@@ -61,6 +69,11 @@ def project_month_end(food_df):
         return 0
 
     days_so_far = food_df['date'].dt.day.max()
+
+    # Avoid division by zero
+    if days_so_far == 0:
+        return 0
+
     current_total = food_df['amount'].sum()
 
     projected_total = (current_total / days_so_far) * 30
