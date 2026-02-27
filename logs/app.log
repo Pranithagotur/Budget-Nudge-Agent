@@ -1,0 +1,31 @@
+2026-02-27 14:10:27,716 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-02-27 14:10:27,716 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-27 14:10:27,739 - INFO -  * Restarting with watchdog (windowsapi)
+2026-02-27 14:10:28,694 - WARNING -  * Debugger is active!
+2026-02-27 14:10:28,700 - INFO -  * Debugger PIN: 140-840-303
+2026-02-27 14:11:15,011 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-02-27 14:11:15,011 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-27 14:11:15,027 - INFO -  * Restarting with watchdog (windowsapi)
+2026-02-27 14:11:16,194 - WARNING -  * Debugger is active!
+2026-02-27 14:11:16,194 - INFO -  * Debugger PIN: 140-840-303
+2026-02-27 14:12:47,922 - INFO - Dashboard loaded successfully
+2026-02-27 14:12:47,962 - INFO - 127.0.0.1 - - [27/Feb/2026 14:12:47] "GET / HTTP/1.1" 200 -
+2026-02-27 14:12:48,110 - INFO - 127.0.0.1 - - [27/Feb/2026 14:12:48] "GET /static/style.css HTTP/1.1" 200 -
+2026-02-27 14:12:48,142 - INFO - 127.0.0.1 - - [27/Feb/2026 14:12:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-02-27 14:24:25,593 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-02-27 14:24:25,593 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-27 14:24:25,608 - INFO -  * Restarting with watchdog (windowsapi)
+2026-02-27 14:24:26,871 - WARNING -  * Debugger is active!
+2026-02-27 14:24:26,871 - INFO -  * Debugger PIN: 140-840-303
+2026-02-27 14:24:31,628 - INFO -  * Detected change in 'C:\\Users\\prani\\OneDrive\\Desktop\\budget-nudge-agent\\app.py', reloading
+2026-02-27 14:24:31,628 - INFO -  * Detected change in 'C:\\Users\\prani\\OneDrive\\Desktop\\budget-nudge-agent\\app.py', reloading
+2026-02-27 14:24:32,077 - INFO -  * Restarting with watchdog (windowsapi)
+2026-02-27 14:24:33,028 - WARNING -  * Debugger is active!
+2026-02-27 14:24:33,032 - INFO -  * Debugger PIN: 140-840-303
+2026-02-27 14:24:34,320 - INFO -  * Detected change in 'C:\\Users\\prani\\OneDrive\\Desktop\\budget-nudge-agent\\app.py', reloading
+2026-02-27 14:24:35,186 - INFO -  * Restarting with watchdog (windowsapi)
+2026-02-27 14:24:36,056 - WARNING -  * Debugger is active!
+2026-02-27 14:24:36,058 - INFO -  * Debugger PIN: 140-840-303

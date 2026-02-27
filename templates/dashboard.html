@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Behavioral Financial Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>🧠 Behavioral Financial Intelligence Dashboard</h1>
+
+<div class="card">
+    <h2>Summary</h2>
+    <p>Total Spend: ₹{{ total_spend }}</p>
+    <p>Food Spend: ₹{{ food_spend }}</p>
+    <p>Total Orders: {{ order_count }}</p>
+</div>
+
+<div class="card">
+    <h2>Behavioral Metrics</h2>
+    <p>Vendor Dependency: {{ vendor_ratio }}% ({{ top_vendor }})</p>
+    <p>Late Night Ratio: {{ late_ratio }}%</p>
+    <p>Week-over-Week Growth: {{ growth }}%</p>
+</div>
+
+<div class="card">
+    <h2>Risk Analysis</h2>
+    <p>Addiction Score: {{ addiction_score }}</p>
+    <p>Risk Level: <strong>{{ risk_level }}</strong></p>
+    <p>Financial Health Index: {{ fhi }}</p>
+    <p>Projected Month-End Spend: ₹{{ projected_spend }}</p>
+</div>
+
+<div class="card">
+    <h2>Alerts</h2>
+    {% if food_spend > 3000 %}
+        <p class="danger">🚨 Budget Exceeded!</p>
+    {% endif %}
+
+    {% if growth > 20 %}
+        <p class="warning">📈 Rapid Spending Growth!</p>
+    {% endif %}
+
+    {% if anomalies > 0 %}
+        <p class="warning">⚠ Spending Anomaly Detected!</p>
+    {% endif %}
+</div>
+
+</body>
+</html>
