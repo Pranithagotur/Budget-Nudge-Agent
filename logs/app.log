@@ -29,3 +29,18 @@
 2026-02-27 14:24:35,186 - INFO -  * Restarting with watchdog (windowsapi)
 2026-02-27 14:24:36,056 - WARNING -  * Debugger is active!
 2026-02-27 14:24:36,058 - INFO -  * Debugger PIN: 140-840-303
+2026-02-27 14:25:17,440 - INFO - Dashboard loaded successfully
+2026-02-27 14:25:17,453 - INFO - 127.0.0.1 - - [27/Feb/2026 14:25:17] "GET / HTTP/1.1" 200 -
+2026-02-27 14:25:17,557 - INFO - 127.0.0.1 - - [27/Feb/2026 14:25:17] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-02-27 14:34:27,958 - INFO - Dashboard loaded successfully
+2026-02-27 14:34:27,960 - INFO - 127.0.0.1 - - [27/Feb/2026 14:34:27] "GET / HTTP/1.1" 200 -
+2026-02-27 14:34:28,017 - INFO - 127.0.0.1 - - [27/Feb/2026 14:34:28] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-02-27 15:02:09,292 - INFO -  * Detected change in 'C:\\Users\\prani\\OneDrive\\Desktop\\budget-nudge-agent\\modules\\addiction_score.py', reloading
+2026-02-27 15:02:09,293 - INFO -  * Detected change in 'C:\\Users\\prani\\OneDrive\\Desktop\\budget-nudge-agent\\modules\\categorization.py', reloading
+2026-02-27 15:02:09,295 - INFO -  * Detected change in 'C:\\Users\\prani\\OneDrive\\Desktop\\budget-nudge-agent\\modules\\data_loader.py', reloading
+2026-02-27 15:02:09,297 - INFO -  * Detected change in 'C:\\Users\\prani\\OneDrive\\Desktop\\budget-nudge-agent\\modules\\growth_analysis.py', reloading
+2026-02-27 15:02:09,299 - INFO -  * Detected change in 'C:\\Users\\prani\\OneDrive\\Desktop\\budget-nudge-agent\\modules\\risk_engine.py', reloading
+2026-02-27 15:02:09,301 - INFO -  * Detected change in 'C:\\Users\\prani\\OneDrive\\Desktop\\budget-nudge-agent\\modules\\spend_analysis.py', reloading
+2026-02-27 15:02:10,129 - INFO -  * Restarting with watchdog (windowsapi)
+2026-02-27 15:02:10,736 - WARNING -  * Debugger is active!
+2026-02-27 15:02:10,739 - INFO -  * Debugger PIN: 140-840-303
